@@ -1,0 +1,13 @@
+Use PHP to handle tags.  When Javascript is enabled, and the tag button is clicked, use Ajax to update the page w/o reloading it.  Consider using History.js, or jQuery-Ajax calls.
+
+resize_project_boxes() in projects.php should possibly be moved into a different place, depending on what is best to avoid flicker.
+
+Clean up file.php.
+
+Moved the minSize constant out of resize_project_boxes and into a standard location for constants.
+
+Use AJAX to add/remove project boxes when you click on one of the nav items, to match the new tag list.  Use animation to make the project boxes fade in/out or fly on/off the page to produce the new project-box set.
+
+Many parts of the site could be cached, such as the individual project boxes, and the tags associated with each project.  This would make the project-box code much faster.  Also, entire pages can be cached to some extent.  See <http://phplens.com/lens/php-book/optimizing-debugging-php.php>.
+
+Do we need the onclick for tag items in html/header.php and the add_tags function in projects.js?

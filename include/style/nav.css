@@ -1,0 +1,40 @@
+nav
+{
+	cursor: default;
+	margin-left: 2em;
+}
+nav ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	white-space: nowrap;
+}
+nav ul li
+{
+	display: inline;
+}
+nav ul li a,
+nav ul li .unlinked
+{
+	border: 1px solid #eee;
+	border-radius: .9em;
+	box-shadow: 2px 2px 2px #ccc;
+	margin: 0 .25em;
+	padding: .25em .5em;
+	text-decoration: none;
+}
+nav ul li a:hover
+{
+	background-color: #ffa;
+}
+nav ul li .unlinked
+{
+	cursor: default;
+	font-weight: bold;
+}
+nav li .enabled
+{
+	background-color: gray;
+	color: white;
+}
