@@ -20,8 +20,7 @@ function get_all_tags()
  */
 function get_requested_tags()
 {
-	$tags = $_GET['tags'];
-	return $tags ? $tags : "";
+	return isset($_GET['tags']) ? $_GET['tags'] : '';
 }
 
 /**

@@ -10,8 +10,8 @@
 </script>
 
 <!-- auto-load scripts -->
-<?php load_scripts('include/script')?>
-<?php //load_scripts('include/script/_thirdparty/.ajax')?>
+<?php load_scripts()?>
+<?php //load_scripts('_thirdparty/.ajax')?>
 
 <!-- SEO by Amortech -->
 <script>

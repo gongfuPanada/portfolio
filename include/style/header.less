@@ -1,0 +1,27 @@
+@import 'config.less';
+
+body > header
+{
+	padding: 0 1em;
+}
+body > header h1
+{
+	.text-outline-shadow(2px, 3px, #ccc);
+	
+	color: #eee;
+	font-family: monospace;
+	font-size: 3em;
+	letter-spacing: -.1em;
+	margin: 0;
+	white-space: nowrap;
+}
+body > header table
+{
+	border-collapse: collapse;
+}
+body > header table td,
+body > header table th
+{
+	/*border: 1px solid black; /* for debugging */
+	vertical-align: middle;
+}
