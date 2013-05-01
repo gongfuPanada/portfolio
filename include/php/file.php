@@ -48,6 +48,17 @@ function expand_pattern($pattern)
 }
 
 /**
+ * Returns TRUE if fnmatch() matches one of an array of patterns.
+ */
+function fnmatch_any($patterns, $string, $flags=0)
+{
+	foreach ($patterns as $pattern)
+		if (fnmatch($pattern, $string, $flags))
+			return TRUE;
+	return FALSE;
+}
+
+/**
  * Specifies the type of a path, such as an absolute or relative filesystem
  * path, or a URL.
  */
@@ -76,7 +87,7 @@ function list_tree($root, $pattern='', $relativeto=RelativeTo::SEARCH_ROOT)
 	switch ($relativeto)
 	{
 		case RelativeTo::ABSOLUTE:      $prefix = SITE_ROOT_DIR . DIRECTORY_SEPARATOR . $root . DIRECTORY_SEPARATOR; break;
-		case RelativeTo::DOCUMENT_ROOT: $prefix = SITE_ROOT_RELATIVE_TO_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . $root . DIRECTORY_SEPARATOR; break;
+		case RelativeTo::DOCUMENT_ROOT: $prefix = SITE_ROOT_DIR_FROM_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . $root . DIRECTORY_SEPARATOR; break;
 		case RelativeTo::SITE_ROOT:     $prefix = $root . DIRECTORY_SEPARATOR; break;
 		case RelativeTo::SEARCH_ROOT:   $prefix = ''; break;
 		case RelativeTo::URL:           $prefix = SITE_ROOT_URL . $root . '/'; break;
@@ -101,11 +112,7 @@ function list_tree($root, $pattern='', $relativeto=RelativeTo::SEARCH_ROOT)
 		$file = $prefix . $iter->getInnerIterator()->getSubPathname();
 		
 		// check filename against patterns
-		$match = FALSE;
-		foreach ($patterns as $pattern)
-			if ($match = fnmatch($pattern, $file))
-				break;
-		if (!$match)
+		if (!fnmatch_any($patterns, $file))
 			continue;
 		
 		// exclude hidden directories (whose names start with a dot)
@@ -117,22 +124,5 @@ function list_tree($root, $pattern='', $relativeto=RelativeTo::SEARCH_ROOT)
 	
 	sort($results);
 	return $results;
-}
-
-/**
- * Converts a filesystem path to a URL.
- *
- * @param string $path The filesystem path to convert.
- *
- * If $path is absolute and a descendent of $_SERVER['DOCUMENT_ROOT'], 
- */
-function path2url($path)
-{
-	$path = realpath($path);
-	$root = realpath($_SERVER['DOCUMENT_ROOT']);
-	$n = strlen($root);
-	if (!strncmp($path, $root, $n))
-		$path = substr($path, $n);
-	return strtr($path, DIRECTORY_SEPARATOR, '/');
 }
 ?>

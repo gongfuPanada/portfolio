@@ -1,3 +1,5 @@
+@import 'config.less';
+
 nav
 {
 	cursor: default;
@@ -14,9 +16,10 @@ nav ul li
 {
 	display: inline;
 }
-nav ul li a,
-nav ul li .unlinked
+nav ul li a
 {
+	.transition-out(background-color color);
+	
 	border: 1px solid #eee;
 	border-radius: .9em;
 	box-shadow: 2px 2px 2px #ccc;
@@ -24,17 +27,13 @@ nav ul li .unlinked
 	padding: .25em .5em;
 	text-decoration: none;
 }
+nav ul li a.selected
+{
+	background-color: #999;
+	color: #fff;
+}
 nav ul li a:hover
 {
 	background-color: #ffa;
-}
-nav ul li .unlinked
-{
-	cursor: default;
-	font-weight: bold;
-}
-nav li .enabled
-{
-	background-color: gray;
-	color: white;
+	transition: 0;
 }
