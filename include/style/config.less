@@ -1,3 +1,15 @@
+/**
+ * Removes the default anchor styling.
+ */
+.no-anchor-style()
+{
+	color: inherit;
+	text-decoration: none;
+}
+
+/**
+ * Fakes a soft box-outline using multiple shadows.
+ */
 .box-outline-shadow(@offset, @blur, @color)
 {
 	box-shadow:
@@ -10,11 +22,10 @@
 		( @offset*.7071) (-@offset*.7071) @blur @color,
 		(-@offset*.7071) ( @offset*.7071) @blur @color;
 }
-.no-anchor()
-{
-	color: inherit;
-	text-decoration: none;
-}
+
+/**
+ * Fakes a soft text-outline using multiple shadows.
+ */
 .text-outline-shadow(@offset, @blur, @color)
 {
 	text-shadow:
@@ -27,6 +38,20 @@
 		( @offset*.7071) (-@offset*.7071) @blur @color,
 		(-@offset*.7071) ( @offset*.7071) @blur @color;
 }
+
+/**
+ * Makes text look like it is glowing.
+ */
+.text-glow(@offset: 2px, @blur: 12px, @text-color: #ccc, @glow-color: #fff)
+{
+	.text-outline-shadow(@offset, @blur, @glow-color);
+	
+	color: @text-color;
+}
+
+/**
+ * Applies a fade-out transition to multiple properties.
+ */
 .transition-out(@property)
 {
 	transition-property: @property;

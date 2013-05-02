@@ -5,11 +5,14 @@
  */
 function get_all_tags()
 {
+	// FIXME: this should not be hard-coded
 	return array(
-	'p' => 'Programming',
-	'g' => 'Game development',
-	'c' => 'Content creation',
-	'a' => 'Art');
+		'p' => 'Programming',
+		'g' => 'Game development',
+		'c' => 'Content creation',
+		'a' => 'Art',
+		'b' => 'Testing',
+		'e' => 'Another tag');
 }
 
 /**
@@ -39,7 +42,7 @@ function toggle_tag($tag, $tags=NULL)
 {
 	if ($tags === NULL)
 		$tags = get_requested_tags();
-	
+
 	$tags = str_split($tags);
 	$i = array_search($tag, $tags, TRUE);
 	if ($i !== FALSE) unset($tags[$i]);
@@ -65,7 +68,7 @@ function tag_in_array($tag, $tags=NULL)
 {
 	if ($tags === NULL)
 		$tags = get_requested_tags();
-	
+
 	$tags = str_split($tags);
 	return in_array($tag, $tags, TRUE);
 }
@@ -87,7 +90,7 @@ function any_tags($needles, $haystack=NULL)
 {
 	if ($haystack === NULL)
 		$haystack = get_requested_tags();
-	
+
 	$s = strtr($haystack, $needles, str_pad('', strlen($needles), '$'));
 	return strpos($s, '$') !== FALSE;
 }

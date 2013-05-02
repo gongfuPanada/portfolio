@@ -22,23 +22,24 @@ define('SITE_ROOT_DIR', realpath($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR
 define('SITE_ROOT_URL', '/' . strtr(SITE_ROOT_DIR_FROM_DOCUMENT_ROOT, DIRECTORY_SEPARATOR, '/') . '/');
 
 /**
+ * The directory where cached files are stored, relative to the site's root
+ * directory.
+ */
+define('CACHE_DIR_FROM_SITE_ROOT', 'include/cache');
+
+/**
  * The directory where projects are stored, relative to the site's root
  * directory.
  */
-define('PROJECTS_DIR_FROM_SITE_ROOT', strtr('include/content/projects', '/', DIRECTORY_SEPARATOR));
-
-/**
- * The directory where projects are stored.
- */
-define('PROJECTS_DIR', realpath(SITE_ROOT_DIR . DIRECTORY_SEPARATOR . PROJECTS_DIR_FROM_SITE_ROOT));
+define('PROJECTS_DIR_FROM_SITE_ROOT', 'include/content/projects');
 
 ////////////////////////////////////////////////////////////////////////////////
 
+define('SITE_TITLE',       'David Osborn');
 define('SITE_AUTHOR',      'David Osborn');
 define('SITE_AUTHOR_LINK', 'mailto:davidcosborn@gmail.com');
-define('SITE_HOST',        'Registered Hosting');
-define('SITE_HOST_LINK',   'http://registeredhosting.ca/');
-define('SITE_TITLE',       'David Osborn');
+define('SITE_HOST',        'DreamHost.com');
+define('SITE_HOST_LINK',   'http://dreamhost.com/');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -55,10 +56,15 @@ define('MIN_BOX_SIZE', 350);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-include_once SITE_ROOT_DIR . '/include/php/file.php';
-include_once SITE_ROOT_DIR . '/include/php/include.php';
-include_once SITE_ROOT_DIR . '/include/php/project.php';
-include_once SITE_ROOT_DIR . '/include/php/tags.php';
+// auto-load PHP modules
+include_once 'file.php'; // list_tree
+foreach (list_tree('include/php', '*.php', ListTreePathType::ABSOLUTE) as $file)
+	include_once $file;
+
+// initialize cache directory
+$cache_dir = join_path(SITE_ROOT_DIR, CACHE_DIR_FROM_SITE_ROOT);
+if (!is_dir($cache_dir))
+	mkdir($cache_dir);
 
 ////////////////////////////////////////////////////////////////////////////////
 

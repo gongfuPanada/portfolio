@@ -1,11 +1,14 @@
 <?php
+include_once 'file.php'; // list_tree
+include_once 'path.php'; // join_path
+
 /**
  * Returns a list of projects by searching the projects directory.
  */
 function list_projects()
 {
 	$names = array();
-	$files = list_tree(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}', RelativeTo::SEARCH_ROOT);
+	$files = list_tree(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}', ListTreePathType::RELATIVE_TO_SEARCH_ROOT);
 	foreach ($files as $file)
 		$names[] = substr($file, 0, strpos($file, '.'));
 	return $names;
@@ -17,28 +20,28 @@ function list_projects()
 function load_project($name)
 {
 	// search for the project file
-	$files = glob(PROJECTS_DIR . DIRECTORY_SEPARATOR . $name . '.*');
-	$patterns = expand_pattern('*.{html,php}');
+	$files = glob(join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, $name . '.*'));
+	$patterns = expand_brace_pattern('*.{html,php}');
 	foreach ($files as $file)
 		if (fnmatch_any($patterns, $file))
 			break;
 	if (!isset($file))
 		return FALSE;
-	
+
 	// read file (and process with PHP)
 	ob_start();
 	require $file;
 	$content = ob_get_clean();
-	
+
 	// only continue if file contains header
 	if (substr_compare($content, '<!--', 0, 4) !== 0)
 		return FALSE;
-	
+
 	// separate header from content
 	$header_length = strpos($content, '-->', 4);
 	$header = trim(substr($content, 4, $header_length - 4));
 	$content = trim(substr($content, $header_length + 3));
-	
+
 	// convert header to associative array
 	$dict = array(
 		'tags'   => '',
@@ -50,7 +53,7 @@ function load_project($name)
 		if (isset($pair[1]))
 			$dict[$pair[0]] = trim($pair[1]);
 	}
-	
+
 	// separate preview from content
 	$preview_length = strpos($content, CONTENT_SEPARATOR);
 	if ($preview_length)
@@ -59,14 +62,14 @@ function load_project($name)
 		$content = substr($content, $preview_length + strlen(CONTENT_SEPARATOR));
 	}
 	else $preview = $content;
-	
+
 	// add more to the associative array
 	$dict['name'] = $name;
 	$dict['file'] = $file;
 	$dict['header'] = $header;
 	$dict['preview'] = $preview;
 	$dict['content'] = $content;
-	
+
 	return $dict;
 }
 ?>

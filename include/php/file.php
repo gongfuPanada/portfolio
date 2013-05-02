@@ -1,32 +1,11 @@
 <?php
-function isabspath($path)
-{
-}
-
-function array_transform($array, $function)
-{
-	$result = array();
-	foreach ($array as $element)
-		$result[] = $function($element);
-	return $result;
-}
-
-function trim_path($path)
-{
-	return trim($s, DIRECTORY_SEPARATOR);
-}
-
-function join_path()
-{
-	return implode(DIRECTORY_SEPARATOR,
-		array_filter(array_transform(func_get_args(), trim_path)));
-}
+include_once 'path.php'; // join_path
 
 /**
  * Expands the curly-brace sub-patterns in an extended shell-wildcard-pattern
  * into multiple fnmatch-compatible patterns.
  */
-function expand_pattern($pattern)
+function expand_brace_pattern($pattern)
 {
 	$expanded_patterns = array();
 	$new_patterns = array($pattern);
@@ -58,70 +37,118 @@ function fnmatch_any($patterns, $string, $flags=0)
 	return FALSE;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
- * Specifies the type of a path, such as an absolute or relative filesystem
- * path, or a URL.
+ * An enumeration of the path types that can be returned by list_tree().
  */
-class RelativeTo
+class ListTreePathType
 {
-	const ABSOLUTE      = 0;
-	const DOCUMENT_ROOT = 1;
-	const SITE_ROOT     = 2;
-	const SEARCH_ROOT   = 3;
-	const URL           = 4;
+	/**
+	 * The path is relative to the search directory.  This is the default.
+	 */
+	const RELATIVE_TO_SEARCH_ROOT = 0;
+
+	/**
+	 * The path is absolute.
+	 *
+	 * Implies ListTreeFlags::DIRECTORY_SEPARATOR.
+	 */
+	const ABSOLUTE = 1;
+
+	/**
+	 * The path is relative to the document root.
+	 */
+	const RELATIVE_TO_DOCUMENT_ROOT = 2;
+
+	/**
+	 * The path is relative to the site root.
+	 */
+	const RELATIVE_TO_SITE_ROOT = 3;
+
+	/**
+	 * The path is an absolute-path-reference URL.
+	 *
+	 * Disables ListTreeFlags::DIRECTORY_SEPARATOR.
+	 */
+	const URL = 4;
+};
+
+/**
+ * Flags affecting the behaviour of list_tree().
+ */
+class ListTreeFlags
+{
+	/**
+	 * Uses the directory separator of the host's filesystem to separate path
+	 * components.  Otherwise, the POSIX separator ('/') is used.
+	 */
+	const DIRECTORY_SEPARATOR = 0x01;
+
+	/**
+	 * Causes files/directories that start with a dot to be ignored.
+	 */
+	const SKIP_DOT = 0x02;
 };
 
 /**
  * Finds all the files in a directory tree on the server.
- *
- * @param string $root The root directory to search, relative to the site root.
- * @param string $pattern A shell wildcard pattern to match against.  Defaults
- *        to an empty string.  If the pattern is empty, all files will match.
- * @param RelativeTo $relativeto The absolute/relative context for the results.
- *
- * @remark Skips directories that start with a dot (ie: ".svn").
  */
-function list_tree($root, $pattern='', $relativeto=RelativeTo::SEARCH_ROOT)
+function list_tree($root, $pattern='', $pathType=0, $flags=0)
 {
-	// determine prefix for results
-	switch ($relativeto)
+	// implied behaviour
+	switch ($pathType)
 	{
-		case RelativeTo::ABSOLUTE:      $prefix = SITE_ROOT_DIR . DIRECTORY_SEPARATOR . $root . DIRECTORY_SEPARATOR; break;
-		case RelativeTo::DOCUMENT_ROOT: $prefix = SITE_ROOT_DIR_FROM_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . $root . DIRECTORY_SEPARATOR; break;
-		case RelativeTo::SITE_ROOT:     $prefix = $root . DIRECTORY_SEPARATOR; break;
-		case RelativeTo::SEARCH_ROOT:   $prefix = ''; break;
-		case RelativeTo::URL:           $prefix = SITE_ROOT_URL . $root . '/'; break;
-		
-		default:
-		// error
+		case ListTreePathType::ABSOLUTE:
+		$flags |= ListTreeFlags::DIRECTORY_SEPARATOR;
+		break;
+
+		case ListTreePathType::URL:
+		$flags &= ~ListTreeFlags::DIRECTORY_SEPARATOR;
+		break;
 	}
-	
-	// expand extended pattern into multiple patterns
-	$patterns = expand_pattern($pattern);
-	
+
+	// initialize path-component separator
+	$separator = ($flags & ListTreeFlags::DIRECTORY_SEPARATOR) ? DIRECTORY_SEPARATOR : '/';
+
+	// initialize path prefix for results
+	switch ($pathType)
+	{
+		case ListTreePathType::RELATIVE_TO_SEARCH_ROOT:   $prefix = ''; break;
+		case ListTreePathType::ABSOLUTE:                  $prefix = join_path(SITE_ROOT_DIR, $root) . $separator; break;
+		case ListTreePathType::RELATIVE_TO_DOCUMENT_ROOT: $prefix = join_path(SITE_ROOT_DIR_FROM_DOCUMENT_ROOT, $root) . $separator; break;
+		case ListTreePathType::RELATIVE_TO_SITE_ROOT:     $prefix = $root . $separator; break;
+		case ListTreePathType::URL:                       $prefix = SITE_ROOT_URL . $root . '/'; break;
+		default: trigger_error('invalid path type');
+	}
+
+	// expand brace pattern into multiple patterns
+	$patterns = expand_brace_pattern($pattern);
+
 	// walk through filesystem tree, starting at root
 	$results = array();
-	$iter = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(SITE_ROOT_DIR . DIRECTORY_SEPARATOR . $root));
+	$iter = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(join_path(SITE_ROOT_DIR, $root)));
 	foreach ($iter as $file)
 	{
 		// convert filename to URL when requested
-		if ($relativeto === RelativeTo::URL)
+		if (!($flags & ListTreeFlags::DIRECTORY_SEPARATOR))
 			$file = strtr($file, DIRECTORY_SEPARATOR, '/');
-		
+
 		// add prefix to filename
 		$file = $prefix . $iter->getInnerIterator()->getSubPathname();
-		
+
 		// check filename against patterns
 		if (!fnmatch_any($patterns, $file))
 			continue;
-		
-		// exclude hidden directories (whose names start with a dot)
-		if (preg_match('/[\/\\\]\\./', $file))
-			continue;
-			
+
+		// optionally exclude paths having a dot prefix
+		if (($flags & ListTreeFlags::SKIP_DOT) &&
+			preg_match('/[\/\\\]\\./', $file))
+				continue;
+
 		$results[] = $file;
 	}
-	
+
 	sort($results);
 	return $results;
 }

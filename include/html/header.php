@@ -2,9 +2,11 @@
 	<table>
 		<tr>
 			<td>
-				<h1>
-					<?php echo SITE_TITLE?>
-				</h1>
+				<a href="<?php echo SITE_ROOT_URL?>">
+					<h1>
+						<?php echo SITE_TITLE?>
+					</h1>
+				</a>
 			</td>
 			<td width="100%">
 				<nav id="menu">
