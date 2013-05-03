@@ -80,7 +80,8 @@ function tag_in_array($tag, $tags=NULL)
  */
 function get_tag_name($tag)
 {
-	return get_all_tags()[$tag];
+	$tags = get_all_tags();
+	return $tags[$tag];
 }
 
 /**
