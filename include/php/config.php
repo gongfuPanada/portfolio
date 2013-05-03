@@ -40,6 +40,8 @@ define('SITE_AUTHOR',      'David Osborn');
 define('SITE_AUTHOR_LINK', 'mailto:davidcosborn@gmail.com');
 define('SITE_HOST',        'DreamHost.com');
 define('SITE_HOST_LINK',   'http://dreamhost.com/');
+define('SITE_CODE_HOST',   'GitHub');
+define('SITE_CODE_LINK',   'https://github.com/davidcosborn/portfolio');
 
 ////////////////////////////////////////////////////////////////////////////////
 
