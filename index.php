@@ -45,10 +45,9 @@
 <script>
 function optimize_article_size()
 {
-	minSize = 350;
-	margin = $('article').position().left * 2;
-	bodySize = $('body').width() - margin;
-	n = Math.floor(bodySize / minSize);
+	var margin = $('article').position().left * 2;
+	var bodySize = $('body').width() - margin;
+	var n = Math.floor(bodySize / MIN_BOX_SIZE);
 	$('article').width(bodySize / n - (margin + n + 3));
 }
 $(window).bind('resize', optimize_article_size);
