@@ -1,37 +1,61 @@
 <?php
 /**
- * @return An associative array of recognized tags, where the key is a single
+ * @return An associative array of known tags, where the key is a single
  * character representing the tag, and the value is the name of the tag.
  */
 function get_all_tags()
 {
 	// FIXME: this should not be hard-coded
 	return array(
-		'p' => 'Programming',
-		'g' => 'Game development',
-		'c' => 'Content creation',
-		'a' => 'Art',
-		'b' => 'Testing',
-		'e' => 'Another tag');
+		'p' => 'programming',
+		'g' => 'game development',
+		'c' => 'content creation',
+		'a' => 'art',
+		'b' => 'testing',
+		'e' => 'another tag');
 }
 
 /**
- * @return An array of the currently requested tags.
- *
- * @note The tags are represented by their keys, as defined in
- *       get_recognized_tags().
+ * @return TRUE if there is a tag with the specified key.
  */
-function get_requested_tags()
+function is_tag($key)
 {
-	return isset($_GET['tags']) ? $_GET['tags'] : '';
+	$tags = get_all_tags();
+	return isset($tags[$key]);
 }
+
+/**
+ * @return The name of the tag with the specified key.
+ */
+function get_tag_name($key)
+{
+	$tags = get_all_tags();
+	return $tags[$key];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @return A string containing the keys of the currently selected tags.
+ */
+function get_selected_tags()
+{
+	static $selected_tags;
+	if (!isset($selected_tags))
+		$selected_tags = isset($_GET['tags']) ?
+			implode(array_filter(str_split($_GET['tags']), 'is_tag')) :
+			'';
+	return $selected_tags;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Toggles one tag in an array of tags.
  *
  * @param[in] tag The tag to search for.
- * @param[in] tags The array of tags to search through, defaulting to the
- *            currently requested tags.
+ * @param[in] tags A string containing the original tag set, defaulting to
+ *            the currently selected tags.
  *
  * @return A new array containing (or not containing) tag.
  *
@@ -41,47 +65,12 @@ function get_requested_tags()
 function toggle_tag($tag, $tags=NULL)
 {
 	if ($tags === NULL)
-		$tags = get_requested_tags();
+		$tags = get_selected_tags();
 
-	$tags = str_split($tags);
-	$i = array_search($tag, $tags, TRUE);
-	if ($i !== FALSE) unset($tags[$i]);
-	else $tags[] = $tag;
-	sort($tags);
+	$tags = array_toggle(str_split($tags), $tag);
+	sort($tags); // FIXME: array_unique should implicitly sort the array
 	$tags = array_unique($tags, SORT_STRING);
 	return implode($tags);
-}
-
-/**
- * Checks whether a tag is contained in an array.
- *
- * @param[in] tag The tag to search for.
- * @param[in] tags The array of tags to search through, defaulting to the
- *            currently requested tags.
- *
- * @return TRUE if tag is in tags.
- *
- * @note The tags are represented by their keys, as defined in
- *       get_recognized_tags().
- */
-function tag_in_array($tag, $tags=NULL)
-{
-	if ($tags === NULL)
-		$tags = get_requested_tags();
-
-	$tags = str_split($tags);
-	return in_array($tag, $tags, TRUE);
-}
-
-/**
- * Retrieves the name of a tag using get_recognized_tags().
- *
- * @return The name of the specified tag.
- */
-function get_tag_name($tag)
-{
-	$tags = get_all_tags();
-	return $tags[$tag];
 }
 
 /**
@@ -90,9 +79,8 @@ function get_tag_name($tag)
 function any_tags($needles, $haystack=NULL)
 {
 	if ($haystack === NULL)
-		$haystack = get_requested_tags();
+		$haystack = get_selected_tags();
 
-	$s = strtr($haystack, $needles, str_pad('', strlen($needles), '$'));
-	return strpos($s, '$') !== FALSE;
+	return strcspn($haystack, $needles) < strlen($haystack);
 }
 ?>

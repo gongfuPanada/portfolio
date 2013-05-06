@@ -9,23 +9,19 @@
 	foreach (list_projects() as $project_name)
 		$projects[] = load_project($project_name);
 
-	if (get_requested_tags())
+	if (get_selected_tags())
 	{
 		// hide projects that don't match the selected tags
-		$matching_projects = array();
-		foreach ($projects as $project)
-			if (any_tags($project['tags']))
-				$matching_projects[] = $project;
-		$projects = $matching_projects;
+		$projects = array_filter($projects,
+			function($project) { return any_tags($project['tags']); });
 
 		?>
 		<p>
 			Here are all of my projects that involve
 			<?php
-			$tags = array();
-			foreach (str_split(get_requested_tags()) as $tag)
-				$tags[] = strtolower(get_tag_name($tag));
-			echo format_english_list($tags, 'or');
+			echo format_english_list(
+				array_transform(str_split(get_selected_tags()), 'get_tag_name'),
+				'or');
 			?>.
 		</p>
 		<?php
@@ -76,8 +72,8 @@
 
 <script>
 	/**
-	 * Size project-preview boxes to produce the best layout for the width of
-	 * the window.
+	 * Size the project-preview boxes to produce the best layout for the width
+	 * of the window.
 	 */
 	function optimize_article_size()
 	{

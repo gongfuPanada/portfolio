@@ -27,9 +27,13 @@
 									'?tags=',
 									toggle_tag($tag_key),
 									'"';
-								if (tag_in_array($tag_key))
+								if (any_tags($tag_key))
 									echo ' class="selected"';
-								echo '>', $tag_name, '</a></li>', "\n";
+								echo
+									'>',
+									ucfirst($tag_name),
+									'</a></li>',
+									"\n";
 							}
 							?>
 						</ul>

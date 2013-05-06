@@ -8,7 +8,7 @@ include_once 'path.php'; // join_path
 function list_projects()
 {
 	$names = array();
-	$files = list_tree(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}', ListTreePathType::RELATIVE_TO_SEARCH_ROOT);
+	$files = list_tree(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}');
 	foreach ($files as $file)
 	{
 		$name = substr($file, 0, strrpos($file, '.'));
