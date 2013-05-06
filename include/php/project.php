@@ -44,7 +44,7 @@ function load_project($name)
 	if (!isset($file))
 		return FALSE;*/
 
-	// set environment variables for project
+	// set global variables (conceptually constants) for the project
 	$GLOBALS['PROJECT_DIR'] = join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, dirname($name));
 	$GLOBALS['PROJECT_URL'] = join_path(SITE_ROOT_URL, PROJECTS_DIR_FROM_SITE_ROOT, dirname($name)) . '/';
 

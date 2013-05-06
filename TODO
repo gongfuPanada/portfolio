@@ -12,3 +12,5 @@ Use Ajax to add/remove project boxes when you click on one of the nav items, to 
 Many parts of the site could be cached, such as the individual project boxes, and the tags associated with each project.  This would make the project-box code much faster.  Also, entire pages can be cached to some extent.  See <http://phplens.com/lens/php-book/optimizing-debugging-php.php>.
 
 Do we need the onclick for tag items in html/header.php and the add_tags function in projects.js?
+
+We should either use join_path consistently (everywhere) or not use it at all.  It would be better if we didn't need it.  Check all the uses of join_path and see if its really necessary.
