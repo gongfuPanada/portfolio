@@ -1,5 +1,3 @@
-<meta http-equiv="Content-Script-Type" content="text/javascript"/>
-
 <!-- LESS configuration -->
 <script>
 	less =

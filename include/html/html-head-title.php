@@ -1,5 +1,5 @@
 <title>
-<?php
+	<?php
 	function get_title()
 	{
 		$replacements = array(
@@ -15,5 +15,5 @@
 		return implode(': ', $parts);
 	}
 	echo get_title();
-?>
+	?>
 </title>
