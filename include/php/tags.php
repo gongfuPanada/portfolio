@@ -1,4 +1,6 @@
 <?php
+include_once 'array.php'; // array_transform
+
 /**
  * @return An associative array of known tags, where the key is a single
  * character representing the tag, and the value is the name of the tag.
@@ -51,36 +53,29 @@ function get_selected_tags()
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Toggles one tag in an array of tags.
- *
- * @param[in] tag The tag to search for.
- * @param[in] tags A string containing the original tag set, defaulting to
- *            the currently selected tags.
- *
- * @return A new array containing (or not containing) tag.
- *
- * @note The tags are represented by their keys, as defined in
- *       get_recognized_tags().
+ * Toggles one set of tag keys in another set of tag keys.
  */
-function toggle_tag($tag, $tags=NULL)
+function toggle_tag($toggle_tags, $subject_tags=NULL)
 {
-	if ($tags === NULL)
-		$tags = get_selected_tags();
+	if ($subject_tags === NULL)
+		$subject_tags = get_selected_tags();
 
-	$tags = array_toggle(str_split($tags), $tag);
-	sort($tags); // FIXME: array_unique should implicitly sort the array
-	$tags = array_unique($tags, SORT_STRING);
-	return implode($tags);
+	$zeros = str_repeat("\0", max(strlen($toggle_tags), strlen($subject_tags)));
+	$new_tags = str_replace(' ', '', strtr($toggle_tags, $subject_tags, $zeros));
+	$subject_tags = str_replace(' ', '', strtr($subject_tags, $toggle_tags, $zeros));
+	$subject_tags = str_split($subject_tags .= $new_tags);
+	sort($subject_tags);
+	return implode($subject_tags);
 }
 
 /**
- * @return TRUE if any of the needles is in the haystack.
+ * @return TRUE if there is any intersection between two sets of tag keys.
  */
-function any_tags($needles, $haystack=NULL)
+function any_tags($tags1, $tags2=NULL)
 {
-	if ($haystack === NULL)
-		$haystack = get_selected_tags();
+	if ($tags2 === NULL)
+		$tags2 = get_selected_tags();
 
-	return strcspn($haystack, $needles) < strlen($haystack);
+	return strcspn($tags1, $tags2) < strlen($tags1);
 }
 ?>
