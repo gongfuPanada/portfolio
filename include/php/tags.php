@@ -53,6 +53,17 @@ function get_selected_tags()
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @return TRUE if there is any intersection between two sets of tag keys.
+ */
+function any_tags($tags1, $tags2=NULL)
+{
+	if ($tags2 === NULL)
+		$tags2 = get_selected_tags();
+
+	return strcspn($tags1, $tags2) < strlen($tags1);
+}
+
+/**
  * Toggles one set of tag keys in another set of tag keys.
  */
 function toggle_tag($toggle_tags, $subject_tags=NULL)
@@ -66,16 +77,5 @@ function toggle_tag($toggle_tags, $subject_tags=NULL)
 	$subject_tags = str_split($subject_tags .= $new_tags);
 	sort($subject_tags);
 	return implode($subject_tags);
-}
-
-/**
- * @return TRUE if there is any intersection between two sets of tag keys.
- */
-function any_tags($tags1, $tags2=NULL)
-{
-	if ($tags2 === NULL)
-		$tags2 = get_selected_tags();
-
-	return strcspn($tags1, $tags2) < strlen($tags1);
 }
 ?>
