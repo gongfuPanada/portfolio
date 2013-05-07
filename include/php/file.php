@@ -119,7 +119,7 @@ function list_tree($root, $pattern='', $pathType=0, $flags=0)
 		case ListTreePathType::RELATIVE_TO_DOCUMENT_ROOT: $prefix = join_path(SITE_ROOT_DIR_FROM_DOCUMENT_ROOT, $root) . $separator; break;
 		case ListTreePathType::RELATIVE_TO_SITE_ROOT:     $prefix = $root . $separator; break;
 		case ListTreePathType::URL:                       $prefix = SITE_ROOT_URL . $root . '/'; break;
-		default: trigger_error('invalid path type');
+		default: die('invalid path type');
 	}
 
 	// expand brace pattern into multiple patterns

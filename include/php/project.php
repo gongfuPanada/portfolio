@@ -30,10 +30,11 @@ function load_project($name)
 	foreach ($suffixes as $suffix)
 	{
 		$file = join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, $name . $suffix);
-		if (file_exists($file)) break;
+		if (file_exists($file))
+			goto found_project_file;
 	}
-	if (!isset($suffix))
-		return FALSE;
+	return FALSE;
+	found_project_file:
 
 	// search for the project file
 	/*$files = glob(join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, $name . '.*'));

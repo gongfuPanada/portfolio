@@ -3,9 +3,9 @@
 <?php include SITE_ROOT_DIR . '/include/html/basic-prefix.php'?>
 
 <?php
-// display full content of currently-selected project
-if (isset($_GET['project']) &&
-	($project = load_project($_GET['project'])))
+$selected_project = isset_or($_GET['project']);
+if ($selected_project &&
+	($project = load_project($selected_project)))
 {
 	?><article>
 		<header>
@@ -21,22 +21,17 @@ if (isset($_GET['project']) &&
 }
 else
 {
-	// error: no or invalid project specified
+	// error: failed to load specified project or project not specified
 	?>
 	<p>
 		<?php
-		if (!isset($_GET['project']))
+		if (!$selected_project)
 		{
-			?>
-				No project specified.
-			<?php
+			echo 'No project specified.';
 		}
 		else
 		{
-			?>
-				The name "<?php echo $_GET['project']?>" does not identify a
-				valid project.
-			<?php
+			echo "The project \"$selected_project\" does not exist.";
 		}
 		?>
 		Please choose one of the following projects.

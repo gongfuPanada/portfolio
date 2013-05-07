@@ -15,19 +15,25 @@
 		$projects = array_filter($projects,
 			function($project) { return any_tags($project['tags']); });
 
+		// format the tags for user output
+		$tags_in_english = format_english_list(
+			array_transform(str_split(get_selected_tags()), 'get_tag_name'),
+			'or');
+
+		// render an introductory paragraph for the project list
 		?>
 		<p>
-			Here are all of my projects that involve
 			<?php
-			echo format_english_list(
-				array_transform(str_split(get_selected_tags()), 'get_tag_name'),
-				'or');
-			?>.
+			echo
+				$projects ? 'Here are all of my' : 'There are no',
+				" projects that involve $tags_in_english."
+			?>
 		</p>
 		<?php
 	}
 	else
 	{
+		// render an introductory paragraph for the project list
 		?>
 		<p>
 			Here are all of my projects.  To fine tune this list, select one or
