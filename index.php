@@ -91,6 +91,19 @@
 	}
 	$(window).bind('resize', optimize_article_size);
 	optimize_article_size();
+
+	/**
+	 *
+	 */
+	$(document).ready(function()
+	{
+		a = $('nav#menu a');
+		a.click(function()
+		{
+			$('#project-list').load('/portfolio/');
+		});
+		a.removeAttr('href');
+	});
 </script>
 
 <?php include SITE_ROOT_DIR . '/include/html/basic-suffix.php'?>

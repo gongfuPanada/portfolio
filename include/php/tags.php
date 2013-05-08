@@ -66,7 +66,7 @@ function any_tags($tags1, $tags2=NULL)
 /**
  * Toggles one set of tag keys in another set of tag keys.
  */
-function toggle_tag($toggle_tags, $subject_tags=NULL)
+function toggle_tags($toggle_tags, $subject_tags=NULL)
 {
 	if ($subject_tags === NULL)
 		$subject_tags = get_selected_tags();

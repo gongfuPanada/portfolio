@@ -1,12 +1,3 @@
-<!-- LESS configuration -->
-<script>
-	less =
-	{
-		env: 'development', // 'production'
-		rootpath: <?php echo SITE_ROOT_URL?>
-	};
-</script>
-
 <!-- auto-load scripts -->
 <?php load_scripts('include/script')?>
 <?php //load_scripts('includes/script/_thirdparty/.ajax')?>

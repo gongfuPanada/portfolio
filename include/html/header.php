@@ -20,12 +20,10 @@
 							foreach (get_all_tags() as $tag_key => $tag_name)
 							{
 								echo
-									'<li><a onclick="add_tag(\'',
-									$tag_key,
-									'\')" href="',
+									'<li><a href="',
 									SITE_ROOT_URL,
 									'?tags=',
-									toggle_tag($tag_key),
+									toggle_tags($tag_key),
 									'"';
 								if (any_tags($tag_key))
 									echo ' class="selected"';

@@ -9,19 +9,34 @@ function load_styles($dir)
 {
 	// compile LESS files and include the generated CSS files
 	$less = new lessc;
+	$less->setFormatter('compressed');
+	$less->setVariables(array('root' => '"' . SITE_ROOT_URL . '"'));
 	foreach (list_tree($dir, '*.less', ListTreePathType::RELATIVE_TO_SITE_ROOT) as $less_file)
 	{
-		// determine filename for generated CSS file
-		$css_file = substr($less_file, 0, strlen($less_file) - 4) . 'css';
-		$css_file = strtr($css_file, '/' . DIRECTORY_SEPARATOR, '__');
+		// determine filename for generated files
+		$cache_file = strtr($less_file, '/' . DIRECTORY_SEPARATOR, '__');
+		$cache_file = join_path('include/cache', $cache_file);
+		$css_file = substr($cache_file, 0, strlen($cache_file) - 4) . 'css';
+		$css_url = join_path(SITE_ROOT_URL, $css_file);
+		$cache_file = join_path(SITE_ROOT_DIR, $cache_file);
+		$css_file = join_path(SITE_ROOT_DIR, $css_file);
 
-		// compile LESS file into CSS file
-		$less->checkedCompile(
-			join_path(SITE_ROOT_DIR, $less_file),
-			join_path(SITE_ROOT_DIR, 'include/cache', $css_file));
+		// compile LESS file into CSS file when different from cached copy
+		if (file_exists($cache_file))
+		{
+			$cache = unserialize(file_get_contents($cache_file));
+			$new_cache = $less->cachedCompile($cache);
+			if ($new_cache['updated'] > $cache['updated'])
+				file_put_contents($cache_file, serialize($cache));
+		}
+		else
+		{
+			$cache = $less->cachedCompile($less_file);
+			file_put_contents($cache_file, serialize($cache));
+		}
 
 		// include generated CSS file
-		echo '<link rel="stylesheet" href="', join_path(SITE_ROOT_URL, 'include/cache', $css_file), '"/>', "\n";
+		echo "<link rel=\"stylesheet\" href=\"$css_url\"/>\n";
 	}
 
 	// include static CSS files
