@@ -81,13 +81,16 @@ define('PAGE_ID', _get_page_id());
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// set PHP include path
+set_include_path('.' . PATH_SEPARATOR . SITE_ROOT_DIR . '/include/php');
+
 // auto-load PHP modules
 include_once 'file.php'; // list_dir
 foreach (list_dir('include/php/thirdparty', '*.php', ListDirPathType::ABSOLUTE, ListDirFlags::RECURSIVE) as $file)
 	include_once $file;
 foreach (list_dir('include/php', '*.php', ListDirPathType::ABSOLUTE) as $file)
 	include_once $file;
-// FIXME: load include/php/page/PAGE_ID.php, if it exists
+include_if_exists(join_path(SITE_ROOT_DIR, 'include/php/page', PAGE_ID . '.php'));
 
 // initialize cache directory
 $cache_dir = join_path(SITE_ROOT_DIR, CACHE_DIR_FROM_SITE_ROOT);

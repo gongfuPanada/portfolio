@@ -1,3 +1,7 @@
+Load multiple per-page include files.
+
+Make a nice hand-drawn background with pencil.
+
 When the wildcard for list_dir has no wildcard characters, it should still match the pattern specified.
 
 Make sure the site doesn't error-out when the target directory for list_dir doesn't exist.

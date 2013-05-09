@@ -3,7 +3,8 @@
 	<body id="<?php echo PAGE_ID?>">
 		<?php include 'page-header.php'?>
 		<div id="content">
-			<?php echo isset_or($PAGE_CONTENT)?>
+			<?php include_if_exists(join_path(
+				SITE_ROOT_DIR, 'include/html/page', PAGE_ID, 'content.php'))?>
 		</div>
 		<?php include 'page-footer.php'?>
 

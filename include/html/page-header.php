@@ -10,7 +10,8 @@
 			</td>
 			<td width="100%">
 				<nav>
-					<?php echo isset_or($PAGE_NAV)?>
+					<?php include_if_exists(join_path(
+						SITE_ROOT_DIR, 'include/html/page', PAGE_ID, 'nav.php'))?>
 				</nav>
 			</td>
 		</tr>

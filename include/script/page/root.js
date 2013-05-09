@@ -8,7 +8,7 @@ function optimize_article_size()
 	margin = $('article').position().left * 2;
 	bodySize = $('body').width() - margin;
 	n = Math.floor(bodySize / minSize);
-	$('article').width(bodySize / n - (margin + n + 3));
+	$('article').width(bodySize / n - (margin + n));
 }
 $(window).bind('resize', optimize_article_size);
 optimize_article_size();
@@ -18,10 +18,10 @@ optimize_article_size();
  */
 $(document).ready(function()
 {
-	a = $('nav#menu a');
+	a = $('nav a');
 	a.click(function()
 	{
-		$('#project-list').load('/portfolio/');
+		$('#content').load('/portfolio/include/html/project-list.php');
 	});
 	a.removeAttr('href');
 });
