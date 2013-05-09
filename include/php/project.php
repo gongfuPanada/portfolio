@@ -1,5 +1,5 @@
 <?php
-include_once 'file.php'; // list_tree
+include_once 'file.php'; // list_dir
 include_once 'path.php'; // join_path
 
 /**
@@ -8,7 +8,7 @@ include_once 'path.php'; // join_path
 function list_projects()
 {
 	$names = array();
-	$files = list_tree(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}');
+	$files = list_dir(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}', 0, ListDirFlags::RECURSIVE);
 	foreach ($files as $file)
 	{
 		$name = substr($file, 0, strrpos($file, '.'));

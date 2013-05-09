@@ -1,6 +1,6 @@
-@import 'config.less';
+@import '../config.less';
 
-#project-list article
+article
 {
 	.transition-out(opacity);
 
@@ -14,51 +14,51 @@
 	overflow: hidden;
 	vertical-align: top;
 }
-#project-list article:hover
+article:hover
 {
 	opacity: .999; /* to prevent rendering artifacts */
 	transition: 0;
 }
-#project-list article header
+article header
 {
 	background-color: #888;
 }
-#project-list article header a
+article header a
 {
 	.no-anchor-style;
 }
-#project-list article header a:hover h1
+article header a:hover h1
 {
 	.text-outline-shadow(2px, 12px, #fff);
-	
+
 	color: #999;
 	transition: 0;
 }
-#project-list article header h1
+article header h1
 {
 	.text-outline-shadow(1px, 3px, #333);
 	.transition-out(color text-shadow);
-	
+
 	background-color: #bbb;
 	color: #ddd;
 	margin: 0;
 	padding: .125em .5em;
 }
-#project-list article header h2
+article header h2
 {
 	font-size: 1em;
 	font-weight: normal;
 	margin: 0 .5em;
 }
-#project-list article header h2 table
+article header h2 table
 {
 	width: 100%;
 }
-#project-list article header h2 table td:nth-of-type(even)
+article header h2 table td:nth-of-type(even)
 {
 	text-align: right;
 }
-#project-list article .content
+article .content
 {
 	margin: .25em .5em;
 }

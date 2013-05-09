@@ -4,9 +4,8 @@
  */
 function array_transform($array, $function)
 {
-  $result = array();
-  foreach ($array as $element)
-    $result[] = $function($element);
-  return $result;
+	foreach ($array as &$element)
+		$element = $function($element);
+	return $array;
 }
 ?>

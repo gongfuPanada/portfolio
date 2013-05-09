@@ -1,22 +1,26 @@
 <?php
-include_once 'file.php'; // list_tree
-include_once 'path.php'; // join_path
+include_once 'file.php'; // list_dir
+include_once 'path.php'; // join_path, path_extension
+
+// initialize LESS compiler
+$less = new lessc;
+$less->setFormatter('compressed');
+$less->setVariables(array('root' => '\'' . SITE_ROOT_URL . '\''));
 
 /**
- * Produces <link> tags for stylesheets in the specified directory tree.
+ * Produces a <link> tag for the specified stylesheet file.
  */
-function load_styles($dir)
+function load_style($file)
 {
-	// compile LESS files and include the generated CSS files
-	$less = new lessc;
-	$less->setFormatter('compressed');
-	$less->setVariables(array('root' => '"' . SITE_ROOT_URL . '"'));
-	foreach (list_tree($dir, '*.less', ListTreePathType::RELATIVE_TO_SITE_ROOT) as $less_file)
+	global $less;
+
+	if (substr($file, -5) == '.less')
 	{
-		// determine filename for generated files
-		$cache_file = strtr($less_file, '/' . DIRECTORY_SEPARATOR, '__');
+		// determine filenames for generated files
+		$less_file = join_path(SITE_ROOT_DIR, $file);
+		$cache_file = strtr($file, '/' . DIRECTORY_SEPARATOR, '__');
 		$cache_file = join_path('include/cache', $cache_file);
-		$css_file = substr($cache_file, 0, strlen($cache_file) - 4) . 'css';
+		$css_file = substr($cache_file, 0, -4) . 'css';
 		$css_url = join_path(SITE_ROOT_URL, $css_file);
 		$cache_file = join_path(SITE_ROOT_DIR, $cache_file);
 		$css_file = join_path(SITE_ROOT_DIR, $css_file);
@@ -27,20 +31,30 @@ function load_styles($dir)
 			$cache = unserialize(file_get_contents($cache_file));
 			$new_cache = $less->cachedCompile($cache);
 			if ($new_cache['updated'] > $cache['updated'])
+			{
 				file_put_contents($cache_file, serialize($cache));
+				file_put_contents($css_file, $new_cache['compiled']);
+			}
 		}
 		else
 		{
 			$cache = $less->cachedCompile($less_file);
 			file_put_contents($cache_file, serialize($cache));
+			file_put_contents($css_file, $cache['compiled']);
 		}
-
-		// include generated CSS file
-		echo "<link rel=\"stylesheet\" href=\"$css_url\"/>\n";
 	}
+	else $css_url = join_path(SITE_ROOT_URL, $file);
 
-	// include static CSS files
-	foreach (list_tree($dir, '*.css', ListTreePathType::URL) as $file)
-		echo '<link rel="stylesheet" href="', $file, '"/>', "\n";
+	// produce <link> tag for CSS file
+	echo "<link rel=\"stylesheet\" href=\"$css_url\"/>\n";
+}
+
+/**
+ * Produces <link> tags for all stylesheets in the specified directory.
+ */
+function load_styles($dir, $flags=0)
+{
+	foreach (list_dir($dir, '*.{css,less}', ListDirPathType::RELATIVE_TO_SITE_ROOT, $flags) as $file)
+		load_style($file);
 }
 ?>

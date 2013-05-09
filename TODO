@@ -1,8 +1,13 @@
-Move <script> to just before </body>.
+When the wildcard for list_dir has no wildcard characters, it should still match the pattern specified.
 
-Provide basic-header-prefix.php, basic-header-suffix-body-prefix.php, and basic-body-suffix.php.
+Make sure the site doesn't error-out when the target directory for list_dir doesn't exist.
+Test all kinds of unusual circumstances, like missing directories and files.
 
-Move the nav#menu stuff out of header.php and into /index.php.
+The pattern matching in list_dir should compare extensions non-case-sensitively.
+
+The code in path.php for choosing the best separator doesn't work the best.
+Also, the code in file.php for handling the DIRECTORY_SEPARATOR flag is wrong...
+Also, I don't think the path sorting produces the correct results (/ vs _, etc).
 
 Implement the Ajax stuff in /index.php.
 

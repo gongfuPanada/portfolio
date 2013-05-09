@@ -9,7 +9,7 @@ author: David Osborn
 	large. It is programmed in C++11, using a variety of open-source libraries.
 </p>
 <video width="100%" controls="controls">
-	<source src=" http://www.youtube.com/watch?v=N1XslVXMXNQ"/>
+	<source src="http://www.youtube.com/watch?v=N1XslVXMXNQ"/>
 </video>
 <!-- end of preview -->
 abc123

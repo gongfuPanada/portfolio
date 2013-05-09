@@ -58,10 +58,36 @@ define('MIN_BOX_SIZE', 350);
 
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * The initializer of PAGE_ID.
+ */
+function _get_page_id()
+{
+	include_once 'path.php'; // path_{relative_to,without_extension}
+
+	$path = $_SERVER['PHP_SELF'];
+	$path = path_relative_to($path, SITE_ROOT_URL);
+	$path = path_without_extension($path);
+	if ($path == 'index') return 'root';
+	if (basename($path) == 'index') $path = dirname($path);
+	$path = strtr($path, '/' . DIRECTORY_SEPARATOR, '__');
+	return $path;
+}
+
+/**
+ * The ID of the current page.
+ */
+define('PAGE_ID', _get_page_id());
+
+////////////////////////////////////////////////////////////////////////////////
+
 // auto-load PHP modules
-include_once 'file.php'; // list_tree
-foreach (list_tree('include/php', '*.php', ListTreePathType::ABSOLUTE) as $file)
+include_once 'file.php'; // list_dir
+foreach (list_dir('include/php/thirdparty', '*.php', ListDirPathType::ABSOLUTE, ListDirFlags::RECURSIVE) as $file)
 	include_once $file;
+foreach (list_dir('include/php', '*.php', ListDirPathType::ABSOLUTE) as $file)
+	include_once $file;
+// FIXME: load include/php/page/PAGE_ID.php, if it exists
 
 // initialize cache directory
 $cache_dir = join_path(SITE_ROOT_DIR, CACHE_DIR_FROM_SITE_ROOT);

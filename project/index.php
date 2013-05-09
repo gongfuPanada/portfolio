@@ -1,8 +1,10 @@
-<?php require '../include/php/config.php'?>
-
-<?php include SITE_ROOT_DIR . '/include/html/basic-prefix.php'?>
-
 <?php
+require '../include/php/config.php';
+
+////////////////////////////////////////////////////////////////////////////////
+
+ob_start();
+
 $selected_project = isset_or($_GET['project']);
 if ($selected_project &&
 	($project = load_project($selected_project)))
@@ -25,14 +27,9 @@ else
 	?>
 	<p>
 		<?php
-		if (!$selected_project)
-		{
-			echo 'No project specified.';
-		}
-		else
-		{
-			echo "The project \"$selected_project\" does not exist.";
-		}
+		echo $selected_project ?
+			"The project \"$selected_project\" does not exist." :
+			'No project specified.';
 		?>
 		Please choose one of the following projects.
 	</p>
@@ -40,18 +37,22 @@ else
 		<?php
 		foreach (list_projects() as $project_name)
 		{
-		?>
-		<li>
-			<a href="?project=<?php echo $project_name?>">
-				<?php echo $project_name?>
-			</a>
-		</li>
-		<?php
+			?>
+			<li>
+				<a href="?project=<?php echo $project_name?>">
+					<?php echo $project_name?>
+				</a>
+			</li>
+			<?php
 		}
 		?>
 	</ul>
 	<?php
 }
-?>
 
-<?php include SITE_ROOT_DIR . '/include/html/basic-suffix.php'?>
+$PAGE_CONTENT = ob_get_clean();
+
+////////////////////////////////////////////////////////////////////////////////
+
+include join_path(SITE_ROOT_DIR, 'include/html/page.php')
+?>
