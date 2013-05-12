@@ -85,15 +85,13 @@ define('PAGE_ID', _get_page_id());
 set_include_path('.' . PATH_SEPARATOR . SITE_ROOT_DIR . '/include/php');
 
 // auto-load PHP modules
-include_once 'file.php'; // list_dir
-foreach (list_dir('include/php/thirdparty', '*.php', ListDirPathType::ABSOLUTE, ListDirFlags::RECURSIVE) as $file)
-	include_once $file;
-foreach (list_dir('include/php', '*.php', ListDirPathType::ABSOLUTE) as $file)
-	include_once $file;
-include_if_exists(join_path(SITE_ROOT_DIR, 'include/php/page', PAGE_ID . '.php'));
+include_once 'load_php.php';
+load_php_files('include/php/thirdparty', ListDirFlags::RECURSIVE);
+load_php_files('include/php');
+load_php_file_if_exists('include/php/page/' . PAGE_ID . '.php');
 
 // initialize cache directory
-$cache_dir = join_path(SITE_ROOT_DIR, CACHE_DIR_FROM_SITE_ROOT);
+$cache_dir = SITE_ROOT_DIR . DIRECTORY_SEPARATOR . CACHE_DIR_FROM_SITE_ROOT;
 if (!is_dir($cache_dir))
 	mkdir($cache_dir);
 

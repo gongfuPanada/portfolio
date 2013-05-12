@@ -1,3 +1,9 @@
+Use some kind of HTML compression.
+
+Get rid of join_path when you don't need it (ie: because the paths are not unknown).
+
+Don't require the extension in load_x and load_x_if_exists.
+
 Load multiple per-page include files.
 
 Make a nice hand-drawn background with pencil.
