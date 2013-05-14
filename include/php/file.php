@@ -121,7 +121,7 @@ function list_dir($root, $pattern='', $pathType=0, $flags=0)
 	{
 		case ListDirPathType::RELATIVE_TO_SEARCH_ROOT:   $prefix = ''; break;
 		case ListDirPathType::ABSOLUTE:                  $prefix = join_path(SITE_ROOT_DIR, $root) . $separator; break;
-		case ListDirPathType::RELATIVE_TO_DOCUMENT_ROOT: $prefix = join_path(SITE_ROOT_DIR_FROM_DOCUMENT_ROOT, $root) . $separator; break;
+		case ListDirPathType::RELATIVE_TO_DOCUMENT_ROOT: $prefix = join_path(SITE_ROOT_FROM_DOCUMENT_ROOT, $root) . $separator; break;
 		case ListDirPathType::RELATIVE_TO_SITE_ROOT:     $prefix = $root . $separator; break;
 		case ListDirPathType::URL:                       $prefix = join_path(SITE_ROOT_URL, $root) . '/'; break;
 		default: die('invalid path type');

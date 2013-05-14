@@ -12,7 +12,9 @@ function _lessc()
 	{
 		$lessc = new lessc();
 		$lessc->setFormatter('compressed');
-		$lessc->setVariables(array('root' => '\'' . SITE_ROOT_URL . '\''));
+		$lessc->setVariables(array(
+			'DEFAULT_BOX_SIZE' => DEFAULT_BOX_SIZE . 'px',
+			'SITE_ROOT_URL' => '\'' . SITE_ROOT_URL . '\''));
 	}
 	return $lessc;
 }

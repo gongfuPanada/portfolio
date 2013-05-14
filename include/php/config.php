@@ -1,37 +1,41 @@
 <?php
 /**
- * A relative path specifying the root of the site on the server's filesystem,
- * relative to the document root.
- *
- * @note You should update this constant when you install the website on a new
- *       server.
+ * The document root, as an absolute filesystem path.
  */
-define('SITE_ROOT_DIR_FROM_DOCUMENT_ROOT', 'portfolio');
+define('DOCUMENT_ROOT', rtrim(preg_replace('/[\\/\\\\]+/', '/', $_SERVER['DOCUMENT_ROOT']), '/'));
 
 /**
- * An absolute path specifying the root of the site on the server's filesystem.
+ * The site root, as an absolute filesystem path.
  */
-define('SITE_ROOT_DIR', realpath($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . SITE_ROOT_DIR_FROM_DOCUMENT_ROOT));
+define('SITE_ROOT_DIR', preg_replace('/[\\/\\\\]+/', '/', dirname(dirname(dirname(__FILE__)))));
 
 /**
- * A relative URL (that is, an absolute-path reference) specifying the root of
- * the site.  It is relative to the document root of the webserver.  Because it
- * is an absolute-path reference, it must start with a single '/' character.  It
- * must also end with a '/' character.
+ * Check whether the site root, relative to the document root, can be computed,
+ * which is only possible when SITE_ROOT_DIR is under DOCUMENT_ROOT.
  */
-define('SITE_ROOT_URL', '/' . strtr(SITE_ROOT_DIR_FROM_DOCUMENT_ROOT, DIRECTORY_SEPARATOR, '/') . '/');
+assert(strncmp(DOCUMENT_ROOT, SITE_ROOT_DIR, strlen(DOCUMENT_ROOT)) === 0);
 
 /**
- * The directory where cached files are stored, relative to the site's root
- * directory.
+ * The site root, relative to the document root.
  */
-define('CACHE_DIR_FROM_SITE_ROOT', 'include/cache');
+define('SITE_ROOT_FROM_DOCUMENT_ROOT', substr(SITE_ROOT_DIR, strlen(DOCUMENT_ROOT) + 1));
 
 /**
- * The directory where projects are stored, relative to the site's root
- * directory.
+ * The site root, as a local URL (that is, an absolute-path reference).  It will
+ * be relative to the document root, and it will include a leading and trailing
+ * path separator.
  */
-define('PROJECTS_DIR_FROM_SITE_ROOT', 'include/content/projects');
+define('SITE_ROOT_URL', '/' . SITE_ROOT_FROM_DOCUMENT_ROOT . '/');
+
+/**
+ * The directory where cached files are stored, relative to the site root.
+ */
+define('CACHE_FROM_SITE_ROOT', 'include/cache');
+
+/**
+ * The directory where projects are stored, relative to the site root.
+ */
+define('PROJECTS_FROM_SITE_ROOT', 'include/content/projects');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -52,26 +56,32 @@ define('SITE_CODE_LINK',   'https://github.com/davidcosborn/portfolio');
 define('CONTENT_SEPARATOR', '<!-- end of preview -->');
 
 /**
- * The minimum width of project-summary boxes.
+ * The minimum width of the project-preview boxes.
  */
 define('MIN_BOX_SIZE', 350);
 
+/**
+ * The default width of the project-preview boxes, when Javascript is disabled.
+ */
+define('DEFAULT_BOX_SIZE', 450);
+
 ////////////////////////////////////////////////////////////////////////////////
 
+include_once 'php.php'; // must be included before "path.php"
+include_once 'path.php'; // path_{relative_to,without_extension}
+
 /**
- * The initializer of PAGE_ID.
+ * Generates a unique ID for the current page, based on its path.
  */
 function _get_page_id()
 {
-	include_once 'path.php'; // path_{relative_to,without_extension}
-
 	$path = $_SERVER['PHP_SELF'];
 	$path = path_relative_to($path, SITE_ROOT_URL);
 	$path = path_without_extension($path);
-	if ($path == 'index') return 'root';
-	if (basename($path) == 'index') $path = dirname($path);
-	$path = strtr($path, '/' . DIRECTORY_SEPARATOR, '__');
-	return $path;
+
+	$file = basename($path);
+	if ($file === '' || $file === 'index') $path = dirname($path);
+	return $path === '.' ? 'root' : strtr($path, '/', '_');
 }
 
 /**
@@ -91,7 +101,7 @@ load_php_files('include/php');
 load_php_file_if_exists('include/php/page/' . PAGE_ID . '.php');
 
 // initialize cache directory
-$cache_dir = SITE_ROOT_DIR . DIRECTORY_SEPARATOR . CACHE_DIR_FROM_SITE_ROOT;
+$cache_dir = SITE_ROOT_DIR . '/' . CACHE_FROM_SITE_ROOT;
 if (!is_dir($cache_dir))
 	mkdir($cache_dir);
 

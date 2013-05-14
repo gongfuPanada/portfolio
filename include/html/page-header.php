@@ -1,4 +1,4 @@
-<header>
+<div id="page-header">
 	<table>
 		<tr>
 			<td>
@@ -9,11 +9,10 @@
 				</a>
 			</td>
 			<td width="100%">
-				<nav>
-					<?php include_if_exists(join_path(
-						SITE_ROOT_DIR, 'include/html/page', PAGE_ID, 'nav.php'))?>
-				</nav>
+				<div id="menu">
+					<?php include_if_exists(SITE_ROOT_DIR . '/include/html/page/' . PAGE_ID . '/menu.php')?>
+				</div>
 			</td>
 		</tr>
 	</table>
-</header>
+</div>

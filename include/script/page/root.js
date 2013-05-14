@@ -4,10 +4,9 @@
  */
 function optimize_article_size()
 {
-	minSize = 350;
 	margin = $('article').position().left * 2;
 	bodySize = $('body').width() - margin;
-	n = Math.floor(bodySize / minSize);
+	n = Math.floor(bodySize / MIN_BOX_SIZE);
 	$('article').width(bodySize / n - (margin + n));
 }
 $(window).bind('resize', optimize_article_size);
@@ -18,7 +17,7 @@ optimize_article_size();
  */
 $(document).ready(function()
 {
-	a = $('nav a');
+	a = $('#menu a');
 	a.click(function()
 	{
 		$('#content').load('/portfolio/include/html/project-list.php');

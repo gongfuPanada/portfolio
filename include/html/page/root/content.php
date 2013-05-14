@@ -10,7 +10,7 @@ if (get_selected_tags())
 		function($project) { return any_tags($project['tags']); });
 
 // render a description of the project listing
-generate_project_list_description();
+generate_project_list_description($projects);
 
 // render a preview box for each project
 foreach ($projects as $project)

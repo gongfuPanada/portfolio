@@ -8,14 +8,8 @@ include_once 'path.php'; // join_path
 function list_projects()
 {
 	$names = array();
-	$files = list_dir(PROJECTS_DIR_FROM_SITE_ROOT, '*.{html,php}', 0, ListDirFlags::RECURSIVE);
-	foreach ($files as $file)
-	{
-		$name = substr($file, 0, strrpos($file, '.'));
-		if (basename($name) == 'index')
-			$name = dirname($name);
-		$names[] = $name;
-	}
+	foreach (list_dir(PROJECTS_FROM_SITE_ROOT, '*/index.{html,php}', 0, ListDirFlags::RECURSIVE) as $file)
+		$names[] = dirname($file);
 	sort($names);
 	return $names;
 }
@@ -26,10 +20,9 @@ function list_projects()
 function load_project($name)
 {
 	// search for the project file
-	$suffixes = expand_brace_pattern('{.{html,php},/index.{html,php}}');
-	foreach ($suffixes as $suffix)
+	foreach (array('php', 'html') as $extension)
 	{
-		$file = join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, $name . $suffix);
+		$file = SITE_ROOT_DIR . '/' . PROJECTS_FROM_SITE_ROOT . '/' . $name . '/index.' . $extension;
 		if (file_exists($file))
 			goto found_project_file;
 	}
@@ -37,7 +30,7 @@ function load_project($name)
 	found_project_file:
 
 	// search for the project file
-	/*$files = glob(join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, $name . '.*'));
+	/*$files = glob(SITE_ROOT_DIR . '/' . PROJECTS_FROM_SITE_ROOT . '/' . $name . '.*');
 	$patterns = expand_brace_pattern('*{.{html,php},/index.{html,php}}');
 	foreach ($files as $file)
 		if (fnmatch_any($patterns, $file))
@@ -46,8 +39,8 @@ function load_project($name)
 		return FALSE;*/
 
 	// set global variables (conceptually constants) for the project
-	$GLOBALS['PROJECT_DIR'] = join_path(SITE_ROOT_DIR, PROJECTS_DIR_FROM_SITE_ROOT, dirname($name));
-	$GLOBALS['PROJECT_URL'] = join_path(SITE_ROOT_URL, PROJECTS_DIR_FROM_SITE_ROOT, dirname($name)) . '/';
+	$GLOBALS['PROJECT_DIR'] = SITE_ROOT_DIR . '/' . PROJECTS_FROM_SITE_ROOT . '/' . $name;
+	$GLOBALS['PROJECT_URL'] = SITE_ROOT_URL . '/' . PROJECTS_FROM_SITE_ROOT . '/' . $name . '/';
 
 	// read file (and process with PHP)
 	ob_start();

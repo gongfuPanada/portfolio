@@ -1,16 +1,16 @@
 <?php
 include_once 'array.php'; // array_transform
-include_once 'path.php'; // join_path
 include_once 'string.php'; // format_english_list
 include_once 'tags.php'; // get_{selected_tags,tag_name}
 
 /**
  * Generates the HTML for the description of a project list.
  *
+ * @param bool $projects TRUE if there are any projects listed.
  * @param string $tags A string of the tag keys associated with the listed
  *        projects.  Defaults to the currently-selected tags.
  */
-function generate_project_list_description($tags=NULL)
+function generate_project_list_description($projects, $tags=NULL)
 {
 	if (!isset($tags))
 		$tags = get_selected_tags();
@@ -26,8 +26,7 @@ function generate_project_list_description($tags=NULL)
 		?>
 		<p>
 			<?php
-			echo
-				$projects ? 'Here are all of my' : 'There are no',
+			echo $projects ? 'Here are all of my' : 'There are no',
 				" projects that involve $tags_in_english."
 			?>
 		</p>
@@ -60,7 +59,7 @@ function generate_project_preview($project)
 	?><article id="project-preview-<?php echo strtr($project['name'], '/', '-')?>">
 		<header>
 			<hgroup>
-				<a href="<?php echo join_path(SITE_ROOT_URL, 'project/?project=' . $project['name'])?>">
+				<a href="<?php echo SITE_ROOT_URL . 'project/?project=' . $project['name']?>">
 					<h1>
 						<?php echo $project['title']?>
 					</h1>

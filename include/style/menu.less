@@ -1,25 +1,25 @@
 @import 'config.less';
 
-nav
+#menu
 {
 	cursor: default;
 	margin-left: 2em;
 }
-nav ul
+#menu ul
 {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	white-space: nowrap;
 }
-nav ul li
+#menu ul li
 {
 	display: inline;
 }
-nav ul li a
+#menu ul li a
 {
 	.transition-out(background-color color opacity text-shadow);
-	
+
 	background-color: #ddd;
 	border: 1px solid #999;
 	border-radius: .9em;
@@ -29,16 +29,16 @@ nav ul li a
 	padding: .25em .5em;
 	text-decoration: none;
 }
-nav ul li a.selected
+#menu ul li a.selected
 {
 	background-color: #999 !important;
 	border-color: #333;
 	color: #eee;
 }
-nav ul li a:hover
+#menu ul li a:hover
 {
 	.text-outline-shadow(2px, 12px, #fff);
-	
+
 	color: #666;
 	opacity: 1;
 	transition: 0;
@@ -46,27 +46,27 @@ nav ul li a:hover
 
 /* color coding */
 
-nav ul li:nth-of-type(1) a
+#menu ul li:nth-of-type(1) a
 {
 	background-color: #cde;
 }
-nav ul li:nth-of-type(2) a
+#menu ul li:nth-of-type(2) a
 {
 	background-color: #dec;
 }
-nav ul li:nth-of-type(3) a
+#menu ul li:nth-of-type(3) a
 {
 	background-color: #ecd;
 }
-nav ul li:nth-of-type(4) a
+#menu ul li:nth-of-type(4) a
 {
 	background-color: #ced;
 }
-nav ul li:nth-of-type(5) a
+#menu ul li:nth-of-type(5) a
 {
 	background-color: #edc;
 }
-nav ul li:nth-of-type(6) a
+#menu ul li:nth-of-type(6) a
 {
 	background-color: #dce;
 }
